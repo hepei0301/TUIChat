@@ -97,7 +97,6 @@ export default {
 
   methods: {
     initListener() {
-      console.log(11111)
       // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
       this.tim.on(this.TIM.EVENT.SDK_READY, this.onReadyStateUpdate, this)
       // SDK NOT READT
@@ -187,9 +186,7 @@ export default {
             userID: this.userID,
             userSig: this.userSig,
           })
-          .then(() => {
-            console.log(3434)
-          })
+          .then(() => {})
       }
     },
     kickedOutReason(type) {
