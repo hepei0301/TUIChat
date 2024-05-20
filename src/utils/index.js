@@ -1,47 +1,33 @@
-const LOG_PREFIX = 'trtc-callling-webrtc-demo:';
 
-export function isValidatePhoneNum(phoneNum) {
-  const reg = new RegExp('^1[0-9]{10}$', 'gi');
-  return phoneNum.match(reg);
-}
+export function throttle(func, wait) {
+  let timeout
+  return function () {
+    let that = this
+    let args = arguments
 
-export function isUserNameValid(username) {
-  return username && username.length <= 20;
-}
-
-export function setUserLoginInfo({token, phoneNum}) {
-  localStorage.setItem('userInfo', JSON.stringify({token, phoneNum}));
-}
-
-export function addToSearchHistory(searchUser) {
-  const MAX_HISTORY_NUM = 3;
-  let searchUserList = getSearchHistory();
-  const found = searchUserList.find(user => user.userId === searchUser.userId);
-  if (!found) {
-    searchUserList.push(searchUser);
-  }
-  if (searchUserList.length > MAX_HISTORY_NUM) {
-    searchUserList = searchUserList.slice(-MAX_HISTORY_NUM);
-  }
-  localStorage.setItem('searchHistory', JSON.stringify(searchUserList));
-}
-
-export function getSearchHistory() {
-  try {
-    return JSON.parse(localStorage.getItem('searchHistory') || '[]');
-  } catch (e) {
-    return [];
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        timeout = null
+        func.apply(that, args)
+      }, wait)
+    }
   }
 }
 
-export function getUserLoginInfo() {
-  try {
-    return JSON.parse(localStorage.getItem('userInfo') || '{}');
-  } catch (e) {
-    return {};
+/**
+ * 利用 document.title 做新消息提示
+ * @export
+ * @param {Number} count
+ */
+export function titleNotify(count) {
+  const hasNewMessage = count > 0
+  if (hasNewMessage) {
+    if (document.title.search(/\((.*?)\)/) >= 0) {
+      document.title = document.title.replace(/\((.*?)\)/, `(${count > 99 ? '99+' : count})`)
+    } else {
+      document.title = `(${count})${document.title}`
+    }
+  } else {
+    document.title = document.title.replace(/\((.*?)\)/, '')
   }
-}
-
-export function log(content) {
-  console.log(`${LOG_PREFIX} ${content}`)
 }
