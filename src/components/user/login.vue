@@ -10,7 +10,7 @@
              style="width:100%;"
              @keydown.enter.native="submit">
       <!-- Github登录方式 -->
-      <el-form-item prop="userID">
+      <!-- <el-form-item prop="userID">
         <el-select v-model="form.userID"
                    class="user-selector">
           <el-option v-for="index in 30"
@@ -18,39 +18,39 @@
                      :label="`user${index-1}`"
                      :value="`user${index-1}`"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <!-- 线上版本登录方式 -->
-      <!-- <el-form-item prop="userID">
-        <el-input v-model="form.userID" placeholder="请输入用户名" type="text" clearable></el-input>
+      <el-form-item prop="userID">
+        <el-input v-model="form.userID"
+                  placeholder="请输入用户名"
+                  type="text"
+                  clearable></el-input>
       </el-form-item>
-      <el-form-item prop="password">
-        <el-input
-          v-model="form.password"
-          placeholder="请输入密码"
-          type="password"
-          show-password
-          clearable
-        ></el-input>
-      </el-form-item>-->
+      <!-- <el-form-item prop="password">
+        <el-input v-model="form.password"
+                  placeholder="请输入密码"
+                  type="password"
+                  show-password
+                  clearable></el-input>
+      </el-form-item> -->
     </el-form>
     <el-button type="primary"
+               id="login_yunji"
                @click="submit"
+               @v-show="!window.toggleIsLogin"
                style="width:100%; margin-top: 6px;"
                :loading="loading">登录</el-button>
   </div>
 </template>
 
 <script>
-import { Form, FormItem, Select, Option } from 'element-ui'
+import { Form, FormItem } from 'element-ui'
 import logo from '../../assets/image/logo.png'
-
 export default {
   name: 'Login',
   components: {
     ElForm: Form,
     ElFormItem: FormItem,
-    ElSelect: Select,
-    ElOption: Option,
   },
   data() {
     const checkUserID = (rule, value, callback) => {
@@ -63,7 +63,7 @@ export default {
 
     return {
       form: {
-        userID: 'user0',
+        userID: '13796446672',
         password: '',
       },
       rules: {
@@ -80,18 +80,22 @@ export default {
   },
   methods: {
     submit() {
-      this.$refs['login'].validate((valid) => {
-        if (valid) {
-          this.login()
-        }
-      })
+      //   this.$refs['login'].validate((valid) => {
+      //     if (valid) {
+      this.login()
     },
     login() {
       this.loading = true
       this.tim
         .login({
-          userID: this.form.userID,
-          userSig: window.genTestUserSig(this.form.userID).userSig,
+          userID:
+            window.uerInfo && window.uerInfo.phone
+              ? window.uerInfo.phone
+              : this.form.userID,
+          userSig:
+            window.uerInfo && window.uerInfo.sig
+              ? window.uerInfo.sig
+              : window.genTestUserSig(this.form.userID).userSig,
         })
         .then(() => {
           this.loading = false
@@ -111,6 +115,19 @@ export default {
             type: 'success',
             message: '登录成功',
           })
+          setTimeout(() => {
+            this.tim.updateMyProfile({
+              allowType: 'AllowType_Type_AllowAny',
+              avatar:
+                window.uerInfo && window.uerInfo.avatar
+                  ? window.uerInfo.avatar
+                  : '',
+              nick:
+                window.uerInfo && window.uerInfo.name
+                  ? window.uerInfo.name
+                  : '默认昵称',
+            })
+          }, 2000)
         })
         .catch((error) => {
           this.loading = false

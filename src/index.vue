@@ -3,7 +3,7 @@
     <div id="wrapper"
          v-if="!isLogin">
       <login />
-      <qr-code-list />
+      <!-- <qr-code-list /> -->
     </div>
     <div class="loading"
          v-else
@@ -27,9 +27,6 @@
             <current-conversation />
           </el-col>
         </el-row>
-        <a class="official-link"
-           href="https://cloud.tencent.com/product/im"
-           target="_blank">登录 即时通信IM 官网，了解更多体验方式</a>
       </div>
       <calling ref="callLayer"
                class="chat-wrapper" />
@@ -47,11 +44,11 @@ import CurrentConversation from './components/conversation/current-conversation'
 import SideBar from './components/layout/side-bar'
 import Login from './components/user/login'
 import ImagePreviewer from './components/message/image-previewer.vue'
-import QrCodeList from './components/qr-code-list'
 import { translateGroupSystemNotice } from './utils/common'
 import GroupLive from './components/group-live/index'
 import Calling from './components/message/trtc-calling/calling-index'
 import { ACTION } from './utils/trtcCustomMessageMap'
+import { getDate, getTime } from './utils/date.js'
 
 export default {
   title: 'TIMSDK DEMO',
@@ -65,7 +62,6 @@ export default {
     SideBar,
     CurrentConversation,
     ImagePreviewer,
-    QrCodeList,
     GroupLive,
     Calling,
   },
@@ -88,9 +84,88 @@ export default {
       return !this.isSDKReady
     },
   },
+  beforeMount() {
+    window.toggleIsLogin = false
+  },
   mounted() {
     // 初始化监听器
     this.initListener()
+    window.addEventListener('message', (e) => {
+      const data = e.data
+      if (data.messageType === 'login') {
+        window.uerInfo = data
+        let div = document.getElementById('login_yunji')
+        div.click()
+      }
+      if (data.messageType === 'chat') {
+        const div = document.getElementById('conversation-list')
+        div.click()
+        this.$store
+          .dispatch('checkoutConversation', `C2C${data.phone}`)
+          .catch(() => {
+            this.$store.commit('showMessage', {
+              message: '没有找到该用户',
+              type: 'warning',
+            })
+          })
+      }
+      if (data.messageType === 'video') {
+        const div = document.getElementById('conversation-list')
+        div.click()
+        this.$store
+          .dispatch('checkoutConversation', `C2C${data.phone}`)
+          .then(() => {
+            const div = document.getElementById('call_video_yunji')
+            div.click()
+          })
+          .catch(() => {
+            this.$store.commit('showMessage', {
+              message: '没有找到该用户',
+              type: 'warning',
+            })
+          })
+      }
+      if (data.messageType === 'audio') {
+        const div = document.getElementById('conversation-list')
+        div.click()
+        this.$store
+          .dispatch('checkoutConversation', `C2C${data.phone}`)
+          .then(() => {
+            const div = document.getElementById('call_audio_yunji')
+            div.click()
+          })
+          .catch(() => {
+            this.$store.commit('showMessage', {
+              message: '没有找到该用户',
+              type: 'warning',
+            })
+          })
+      }
+      if (data.messageType === 'meet') {
+        const div = document.getElementById('group-list')
+        div.click()
+        this.tim
+          .createGroup({
+            avatar: '',
+            groupID: '',
+            introduction: '',
+            memberList: data.memberList || [],
+            name: `会议/${getDate(new Date())} ${getTime(new Date())}`,
+            notification: '',
+            type: 'Private',
+          })
+          .then((imResponse) => {
+            setTimeout(() => {
+              const active = document.getElementById(
+                imResponse.data.group.groupID
+              )
+              if (active) {
+                active.click()
+              }
+            })
+          })
+      }
+    })
   },
 
   watch: {},
@@ -219,11 +294,15 @@ export default {
 
     onKickOut(event) {
       this.$store.commit('showMessage', {
-        message: `${this.kickedOutReason(event.data.type)}被踢出，请重新登录。`,
+        message: `${this.kickedOutReason(
+          event.data.type
+        )}被踢出，请刷新页面重新登录。`,
         type: 'error',
+        duration: 60000000,
       })
       this.$store.commit('toggleIsLogin', false)
       this.$store.commit('reset')
+      window.toggleIsLogin = true
     },
     onUpdateConversationList(event) {
       this.$store.commit('updateConversationList', event.data)
@@ -419,7 +498,8 @@ body
   justify-content center
   align-items center
   flex-direction column
-  padding-top 60px
+  width 100%
+  height 100%
 .container
   position relative
   height 100vh
@@ -447,10 +527,8 @@ body
   text-overflow ellipsis
   white-space nowrap
 .chat-wrapper
-  margin-top 8vh
-  width $width
-  height $height
-  max-width 1280px
+  width 100vw
+  height 100vh
   box-shadow 0 11px 20px 0 rgba(0, 0, 0, 0.3)
   .official-link
     display flex
