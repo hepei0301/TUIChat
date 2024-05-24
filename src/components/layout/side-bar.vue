@@ -41,9 +41,9 @@
         ></div> -->
       </div>
       <div class="bottom">
-        <div class="iconfont icon-tuichu"
+        <!-- <div class="iconfont icon-tuichu"
              @click="$store.dispatch('logout')"
-             title="退出"></div>
+             title="退出"></div> -->
       </div>
     </div>
     <div class="bar-right">

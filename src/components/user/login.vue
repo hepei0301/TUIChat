@@ -63,7 +63,7 @@ export default {
 
     return {
       form: {
-        userID: '13796446672',
+        userID: '15071046271',
         password: '',
       },
       rules: {
@@ -86,12 +86,13 @@ export default {
     },
     login() {
       this.loading = true
+      this.form.userID =
+        window.uerInfo && window.uerInfo.phone
+          ? window.uerInfo.phone
+          : this.form.userID
       this.tim
         .login({
-          userID:
-            window.uerInfo && window.uerInfo.phone
-              ? window.uerInfo.phone
-              : this.form.userID,
+          userID: this.form.userID,
           userSig:
             window.uerInfo && window.uerInfo.sig
               ? window.uerInfo.sig
