@@ -1,6 +1,7 @@
 <template>
   <div class="list-container">
     <div class="header-bar">
+      群列表
       <!-- <el-autocomplete
         :value-key="'groupID'"
         :debounce="500"
@@ -13,11 +14,11 @@
         :hide-loading="hideSearchLoading"
         @input="hideSearchLoading = false"
         @select="applyJoinGroup"
-      ></el-autocomplete> -->
+      ></el-autocomplete>
       <button title="创建群组"
               @click="showCreateGroupModel">
         <i class="tim-icon-add"></i>
-      </button>
+      </button> -->
     </div>
     <div class="group-container">
       <group-item v-for="group in groupList"
@@ -147,10 +148,12 @@ export default {
     overflow-y scroll
   .header-bar
     display flex
-    justify-content flex-end
+    justify-content center
     flex-shrink 0
     height 50px
     border-bottom 1px solid $background-deep-dark
+    color #ddd
+    font-size 18px
     padding 10px 10px 10px 20px
     // .group-seach-bar
     // width 100%

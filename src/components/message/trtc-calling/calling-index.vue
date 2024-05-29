@@ -7,10 +7,10 @@
         {{ sponsor }}来通话啦
       </div>
       <div class="buttons">
-        <div class="accept"
-             @click="handleDebounce(accept,500)"></div>
         <div class="refuse"
              @click="handleDebounce(refuse,500)"></div>
+        <div class="accept"
+             @click="handleDebounce(accept,500)"></div>
       </div>
     </div>
     <div class="call"
