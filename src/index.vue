@@ -152,7 +152,7 @@ export default {
             memberList: data.memberList || [],
             name: `会议/${getDate(new Date())} ${getTime(new Date())}`,
             notification: '',
-            type: 'Private',
+            type: 'ChatRoom',
           })
           .then((imResponse) => {
             setTimeout(() => {
