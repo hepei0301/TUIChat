@@ -267,7 +267,7 @@ export default {
     kickedOutReason(type) {
       switch (type) {
         case this.TIM.TYPES.KICKED_OUT_MULT_ACCOUNT:
-          return '由于多实例登录'
+          return '由于多设备登录'
         case this.TIM.TYPES.KICKED_OUT_MULT_DEVICE:
           return '由于多设备登录'
         case this.TIM.TYPES.KICKED_OUT_USERSIG_EXPIRED:

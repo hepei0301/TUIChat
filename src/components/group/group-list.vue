@@ -2,23 +2,22 @@
   <div class="list-container">
     <div class="header-bar">
       群列表
-      <!-- <el-autocomplete
-        :value-key="'groupID'"
-        :debounce="500"
-        size="mini"
-        v-model="groupID"
-        placeholder="输入群ID搜索"
-        :fetch-suggestions="searchGroupByID"
-        class="group-seach-bar"
-        prefix-icon="el-icon-search"
-        :hide-loading="hideSearchLoading"
-        @input="hideSearchLoading = false"
-        @select="applyJoinGroup"
-      ></el-autocomplete>
+
+      <!-- <el-autocomplete :value-key="'groupID'"
+                       :debounce="500"
+                       size="mini"
+                       v-model="groupID"
+                       placeholder="输入群ID搜索"
+                       :fetch-suggestions="searchGroupByID"
+                       class="group-seach-bar"
+                       prefix-icon="el-icon-search"
+                       :hide-loading="hideSearchLoading"
+                       @input="hideSearchLoading = false"
+                       @select="applyJoinGroup"></el-autocomplete>
       <button title="创建群组"
               @click="showCreateGroupModel">
         <i class="tim-icon-add"></i>
-      </button> -->
+      </button>  -->
     </div>
     <div class="group-container">
       <group-item v-for="group in groupList"
